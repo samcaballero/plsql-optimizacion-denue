@@ -1,12 +1,9 @@
 -- =============================================================================
 -- 02_crear_tabla_denue.sql
 -- Crea la tabla principal DENUE_ESTABLECIMIENTOS en el esquema DENUE_LAB.
--- Basado en el diccionario de datos oficial DENUE INEGI (edición 2024-2025).
 --
--- ADVERTENCIA: Validar las columnas y sus nombres contra el header real del
--- archivo CSV antes de cargar datos. El diccionario oficial puede diferir
--- ligeramente entre ediciones (columnas adicionales, renombres, orden distinto).
--- Ajustar este DDL si es necesario antes de ejecutar sql/01_carga/.
+-- DDL validado contra el header real del CSV DENUE 05/2026 (42 columnas).
+-- Orden y nombres de columna coinciden exactamente con los del archivo fuente.
 --
 -- Prerequisito: conectado como DENUE_LAB (o SYS con permisos) en FREEPDB1.
 -- =============================================================================
@@ -25,82 +22,60 @@ EXCEPTION
 END;
 /
 
--- 2. Crear la tabla
+-- 2. Crear la tabla (42 columnas, orden del CSV)
 CREATE TABLE DENUE_LAB.DENUE_ESTABLECIMIENTOS
 (
-    -- Identificador único INEGI
-    ID              NUMBER                      NOT NULL,
-
-    -- Datos del establecimiento
-    NOM_ESTAB       VARCHAR2(200),              -- Nombre comercial
-    RAZ_SOCIAL      VARCHAR2(200),              -- Razón social
-
-    -- Actividad económica (SCIAN 2018)
-    CODIGO_ACT      VARCHAR2(10),               -- Código de 6 dígitos
-    NOMBRE_ACT      VARCHAR2(300),              -- Descripción de la actividad
-
-    -- Tamaño
-    PER_OCU         VARCHAR2(30),               -- Rango de personal ocupado
-
-    -- Domicilio — vialidad principal
+    ID              NUMBER              NOT NULL,
+    CLEE            VARCHAR2(30),                   -- Clave estadística, ej: "25012713120002751000000000U6"
+    NOM_ESTAB       VARCHAR2(250),
+    RAZ_SOCIAL      VARCHAR2(250),
+    CODIGO_ACT      VARCHAR2(10),                   -- Código SCIAN 2018 (6 dígitos)
+    NOMBRE_ACT      VARCHAR2(300),
+    PER_OCU         VARCHAR2(30),                   -- Rango personal: "0 a 5 personas", etc.
     TIPO_VIAL       VARCHAR2(50),
-    NOM_VIAL        VARCHAR2(200),
-
-    -- Domicilio — vialidades de referencia (entre calles)
+    NOM_VIAL        VARCHAR2(250),
     TIPO_V_E_1      VARCHAR2(50),
-    NOM_V_E_1       VARCHAR2(200),
+    NOM_V_E_1       VARCHAR2(250),
     TIPO_V_E_2      VARCHAR2(50),
-    NOM_V_E_2       VARCHAR2(200),
+    NOM_V_E_2       VARCHAR2(250),
     TIPO_V_E_3      VARCHAR2(50),
-    NOM_V_E_3       VARCHAR2(200),
-
-    -- Número y letra exterior/interior
+    NOM_V_E_3       VARCHAR2(250),
     NUMERO_EXT      VARCHAR2(30),
     LETRA_EXT       VARCHAR2(10),
     EDIFICIO        VARCHAR2(100),
     EDIFICIO_E      VARCHAR2(100),
     NUMERO_INT      VARCHAR2(30),
     LETRA_INT       VARCHAR2(10),
-
-    -- Asentamiento
-    TIPO_ASENT      VARCHAR2(50),               -- Colonia, ejido, fraccionamiento, etc.
-    NOM_ASENT       VARCHAR2(200),
+    TIPO_ASENT      VARCHAR2(50),
+    NOMB_ASENT      VARCHAR2(250),                  -- nomb_asent en CSV (no nom_asent)
+    TIPOCENCOM      VARCHAR2(50),                   -- Tipo de centro comercial
+    NOM_CENCOM      VARCHAR2(250),                  -- Nombre de centro comercial
+    NUM_LOCAL       VARCHAR2(20),
     COD_POSTAL      VARCHAR2(10),
-
-    -- Claves geoestadísticas INEGI
-    ENTIDAD         NUMBER(2),                  -- Clave entidad federativa (01-32)
-    MUNICIPIO       NUMBER(3),                  -- Clave de municipio
-    LOCALIDAD       NUMBER(4),                  -- Clave de localidad
+    CVE_ENT         NUMBER(2),                      -- Clave numérica entidad 01-32
+    ENTIDAD         VARCHAR2(100),                  -- Nombre de la entidad federativa
+    CVE_MUN         NUMBER(3),                      -- Clave numérica municipio
+    MUNICIPIO       VARCHAR2(150),                  -- Nombre del municipio
+    CVE_LOC         NUMBER(4),                      -- Clave numérica localidad
+    LOCALIDAD       VARCHAR2(150),                  -- Nombre de la localidad
     AGEB            VARCHAR2(4),
     MANZANA         VARCHAR2(3),
-
-    -- Contacto
     TELEFONO        VARCHAR2(20),
-    CORREOELEC      VARCHAR2(200),
+    CORREOELEC      VARCHAR2(250),
     WWW             VARCHAR2(300),
-
-    -- Clasificación
-    TIPOUC          VARCHAR2(10),               -- Tipo de unidad económica
-    MULTIUNIDAD     VARCHAR2(5),
-    ID_STRATUM      VARCHAR2(10),               -- Estrato del establecimiento
-
-    -- Temporalidad
-    FECHA_ALTA      DATE,                       -- Fecha de incorporación al DENUE
-
-    -- Coordenadas geográficas
+    TIPOUNIECO      VARCHAR2(20),                   -- tipoUniEco en CSV (antes TIPOUC)
     LATITUD         NUMBER(12,8),
     LONGITUD        NUMBER(12,8),
+    FECHA_ALTA      DATE,
 
     -- 3. Clave primaria
     CONSTRAINT PK_DENUE_ESTAB PRIMARY KEY (ID)
 );
 
--- 4. Verificación: nombre de tabla y número de columnas creadas
-SELECT table_name,
-       COUNT(*) AS num_columnas
+-- 4. Verificación: debe mostrar 42
+SELECT COUNT(*) AS num_columnas
 FROM   user_tab_columns
-WHERE  table_name = 'DENUE_ESTABLECIMIENTOS'
-GROUP BY table_name;
+WHERE  table_name = 'DENUE_ESTABLECIMIENTOS';
 
 -- =============================================================================
 -- FIN DEL SCRIPT
