@@ -1,0 +1,15 @@
+# Dataset raw — no incluir en el repo por tamaño
+data/raw/
+
+# Archivos de datos y volcados
+*.csv
+*.zip
+*.gz
+*.dmp
+*.log
+*.bak
+
+# Archivos de sistema
+Thumbs.db
+desktop.ini
+.DS_Store
