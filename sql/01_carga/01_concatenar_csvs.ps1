@@ -32,15 +32,15 @@ if (Test-Path $output) {
     Remove-Item $output -Force
 }
 
-$encoding  = [System.Text.Encoding]::UTF8
-$writer    = [System.IO.StreamWriter]::new($output, $false, $encoding)
+$encoding  = [System.Text.Encoding]::GetEncoding(1252)   # Windows-1252 (Latin-1), encoding real del DENUE INEGI
+$writer    = New-Object System.IO.StreamWriter($output, $false, $encoding)
 $totalRows = 0
 $isFirst   = $true
 
 try {
     foreach ($file in $csvFiles) {
         Write-Host "Procesando: $($file.Name)"
-        $reader = [System.IO.StreamReader]::new($file.FullName, $encoding)
+        $reader = New-Object System.IO.StreamReader($file.FullName, $encoding)
 
         try {
             $firstLine = $reader.ReadLine()   # siempre leer el header

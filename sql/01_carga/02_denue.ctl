@@ -14,7 +14,7 @@ OPTIONS (SKIP=1)
 
 -- Indica a SQL*Loader que cargue datos
 LOAD DATA
-CHARACTERSET AL32UTF8
+CHARACTERSET WE8MSWIN1252
 
 -- Archivo fuente dentro del contenedor Docker
 INFILE '/tmp/denue_completo.csv'
