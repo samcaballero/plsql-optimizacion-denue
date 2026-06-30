@@ -107,17 +107,19 @@ GROUP  BY per_ocu
 ORDER  BY num_establecimientos DESC;
 
 -- =============================================================================
--- Q6 — Tiendas OXXO — reescrita para Oracle Text
---      LIKE '%OXXO%' → CONTAINS(NOM_ESTAB, 'OXXO') > 0
---      CONTAINS() invoca el índice DOMAIN IX_DENUE_NOM_ESTAB_TXT directamente.
---      Se espera: DOMAIN INDEX (CONTAINS) → TABLE ACCESS BY ROWID
---      NOTA: los resultados deben ser equivalentes a Q6 baseline salvo que
---      Oracle Text tokeniza por palabras — 'OXXO EXPRÉS' y 'OXXO' son
---      resultados válidos; 'LOXXO' (sin espacio) depende de la configuración
---      del lexer (BASIC_LEXER por defecto no tiene stopwords para español).
+-- Q6 — Tiendas OXXO
+--      LIMITACIÓN DOCUMENTADA: esta consulta seguirá haciendo TABLE ACCESS FULL.
+--      Oracle Text (CTXSYS) no está disponible en esta imagen Docker — ver
+--      sql/03_optimizacion/03_indice_oracle_text.sql y benchmarks/README.md.
+--      LIKE '%OXXO%' con wildcard en ambos extremos no es indexable con B-tree
+--      ni con índices de función. Se mantiene en la suite para que el informe
+--      final refleje honestamente que no toda consulta es optimizable con los
+--      recursos de infraestructura disponibles.
+--      Se usa UPPER() para aprovechar el índice de función IX_DENUE_NOM_ESTAB_FN
+--      en el caso de que la búsqueda cambie a prefijo o exacta en el futuro.
 -- =============================================================================
 PROMPT
-PROMPT === Q6 (optimizada): Tiendas OXXO — Oracle Text CONTAINS ===
+PROMPT === Q6 (limitación documentada): Tiendas OXXO — FULL SCAN inevitable ===
 
 SELECT id,
        nom_estab,
@@ -127,5 +129,5 @@ SELECT id,
        latitud,
        longitud
 FROM   DENUE_ESTABLECIMIENTOS
-WHERE  CONTAINS(nom_estab, 'OXXO') > 0
+WHERE  UPPER(nom_estab) LIKE '%OXXO%'
 ORDER  BY entidad, municipio;

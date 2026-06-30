@@ -38,6 +38,60 @@ consulta que devuelve 7 filas consume exactamente los mismos recursos de I/O que
 una que devuelve 212,251 — evidencia directa del costo del escaneo completo.
 Esta es la línea base que la Fase 3 busca reducir mediante índices.
 
+## Limitación documentada — Q6 (búsqueda OXXO)
+
+### Error encontrado
+
+Al intentar crear el índice Oracle Text para Q6 (`LIKE '%OXXO%'`):
+
+```sql
+CREATE INDEX IX_DENUE_NOM_ESTAB_TXT ON DENUE_ESTABLECIMIENTOS(NOM_ESTAB)
+INDEXTYPE IS CTXSYS.CONTEXT;
+-- ORA-29833: indextype does not exist
+```
+
+Confirmado que `CTXSYS` no existe en esta instancia:
+
+```sql
+SELECT username  FROM dba_users   WHERE username    = 'CTXSYS';       -- no rows
+SELECT comp_name FROM dba_registry WHERE comp_name LIKE '%Text%';     -- no rows
+```
+
+**Causa:** las imágenes Oracle Database Free para Docker no incluyen Oracle Text
+ni otros componentes opcionales (`CTXSYS`, `MDSYS`, etc.). Es una instalación
+mínima de desarrollo, no una instalación Enterprise completa.
+
+### Por qué LIKE '%X%' no es indexable con B-tree
+
+Un índice B-tree ordena los valores de izquierda a derecha. Para `LIKE 'OXXO%'`
+Oracle puede hacer _range scan_ porque el prefijo `'OXXO'` acota el rango en el
+árbol. Para `LIKE '%OXXO%'`, el patrón puede aparecer en cualquier posición del
+valor — Oracle no sabe dónde buscar en el árbol y recurre a `TABLE ACCESS FULL`
+sin importar qué índice B-tree exista sobre la columna.
+
+### Alternativa implementada (mejora parcial)
+
+Se creó un **índice de función** sobre `UPPER(NOM_ESTAB)`:
+
+```sql
+CREATE INDEX IX_DENUE_NOM_ESTAB_FN ON DENUE_ESTABLECIMIENTOS (UPPER(NOM_ESTAB));
+```
+
+Este índice ayuda en búsquedas exactas (`UPPER(NOM_ESTAB) = 'OXXO'`) o de
+prefijo (`UPPER(NOM_ESTAB) LIKE 'OXXO%'`), pero **no resuelve** el problema
+de `LIKE '%OXXO%'` — Q6 sigue haciendo `TABLE ACCESS FULL`.
+
+### Solución completa (fuera del alcance de este laboratorio)
+
+| Opción | Contexto |
+|--------|----------|
+| **Oracle Text** (`CTXSYS.CONTEXT`) | Disponible en Oracle EE/SE; índice invertido, `CONTAINS()` en lugar de `LIKE` |
+| **Elasticsearch / OpenSearch** | Motor externo sincronizado con Oracle; adecuado para producción con millones de búsquedas textuales |
+
+> **Nota:** esta limitación se documenta como ejemplo de **juicio técnico honesto
+> ante restricciones de infraestructura**, no como un fallo del proyecto. Identificar
+> los límites de la optimización disponible es parte del análisis de rendimiento.
+
 ## Archivos en este directorio
 
 | Archivo                   | Descripción                                              |
