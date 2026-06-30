@@ -41,11 +41,11 @@ CREATE TABLE DENUE_LAB.DENUE_ESTABLECIMIENTOS
     TIPO_V_E_3      VARCHAR2(50),
     NOM_V_E_3       VARCHAR2(250),
     NUMERO_EXT      VARCHAR2(30),
-    LETRA_EXT       VARCHAR2(10),
+    LETRA_EXT       VARCHAR2(100),
     EDIFICIO        VARCHAR2(100),
     EDIFICIO_E      VARCHAR2(100),
     NUMERO_INT      VARCHAR2(30),
-    LETRA_INT       VARCHAR2(10),
+    LETRA_INT       VARCHAR2(100),
     TIPO_ASENT      VARCHAR2(50),
     NOMB_ASENT      VARCHAR2(250),                  -- nomb_asent en CSV (no nom_asent)
     TIPOCENCOM      VARCHAR2(50),                   -- Tipo de centro comercial
