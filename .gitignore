@@ -9,6 +9,9 @@ data/raw/
 *.log
 *.bak
 
+# Excepciones: evidencia documentada de benchmarks
+!benchmarks/sqlldr_load.log
+
 # Archivos de sistema
 Thumbs.db
 desktop.ini

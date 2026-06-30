@@ -1,0 +1,118 @@
+
+SQL*Loader: Release 23.26.2.0.0 - Production on Tue Jun 30 05:46:55 2026
+Version 23.26.2.0.0
+
+Copyright (c) 1982, 2026, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /tmp/denue.ctl
+Character Set WE8MSWIN1252 specified for all input.
+
+Data File:      /tmp/denue_completo.csv
+  Bad File:     /tmp/denue_bad.bad
+  Discard File: /tmp/denue_discard.dsc 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 1
+Errors allowed: 1000
+Continuation:    none specified
+Path used:      Direct
+
+Table DENUE_LAB.DENUE_ESTABLECIMIENTOS, loaded from every logical record.
+Insert option in effect for this table: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ID                                  FIRST     *   ,  O(") CHARACTER            
+CLEE                                 NEXT     *   ,  O(") CHARACTER            
+NOM_ESTAB                            NEXT     *   ,  O(") CHARACTER            
+RAZ_SOCIAL                           NEXT     *   ,  O(") CHARACTER            
+CODIGO_ACT                           NEXT     *   ,  O(") CHARACTER            
+NOMBRE_ACT                           NEXT     *   ,  O(") CHARACTER            
+PER_OCU                              NEXT     *   ,  O(") CHARACTER            
+TIPO_VIAL                            NEXT     *   ,  O(") CHARACTER            
+NOM_VIAL                             NEXT     *   ,  O(") CHARACTER            
+TIPO_V_E_1                           NEXT     *   ,  O(") CHARACTER            
+NOM_V_E_1                            NEXT     *   ,  O(") CHARACTER            
+TIPO_V_E_2                           NEXT     *   ,  O(") CHARACTER            
+NOM_V_E_2                            NEXT     *   ,  O(") CHARACTER            
+TIPO_V_E_3                           NEXT     *   ,  O(") CHARACTER            
+NOM_V_E_3                            NEXT     *   ,  O(") CHARACTER            
+NUMERO_EXT                           NEXT     *   ,  O(") CHARACTER            
+LETRA_EXT                            NEXT     *   ,  O(") CHARACTER            
+EDIFICIO                             NEXT     *   ,  O(") CHARACTER            
+EDIFICIO_E                           NEXT     *   ,  O(") CHARACTER            
+NUMERO_INT                           NEXT     *   ,  O(") CHARACTER            
+LETRA_INT                            NEXT     *   ,  O(") CHARACTER            
+TIPO_ASENT                           NEXT     *   ,  O(") CHARACTER            
+NOMB_ASENT                           NEXT     *   ,  O(") CHARACTER            
+TIPOCENCOM                           NEXT     *   ,  O(") CHARACTER            
+NOM_CENCOM                           NEXT     *   ,  O(") CHARACTER            
+NUM_LOCAL                            NEXT     *   ,  O(") CHARACTER            
+COD_POSTAL                           NEXT     *   ,  O(") CHARACTER            
+CVE_ENT                              NEXT     *   ,  O(") CHARACTER            
+ENTIDAD                              NEXT     *   ,  O(") CHARACTER            
+CVE_MUN                              NEXT     *   ,  O(") CHARACTER            
+MUNICIPIO                            NEXT     *   ,  O(") CHARACTER            
+CVE_LOC                              NEXT     *   ,  O(") CHARACTER            
+LOCALIDAD                            NEXT     *   ,  O(") CHARACTER            
+AGEB                                 NEXT     *   ,  O(") CHARACTER            
+MANZANA                              NEXT     *   ,  O(") CHARACTER            
+TELEFONO                             NEXT     *   ,  O(") CHARACTER            
+CORREOELEC                           NEXT     *   ,  O(") CHARACTER            
+WWW                                  NEXT     *   ,  O(") CHARACTER            
+TIPOUNIECO                           NEXT     *   ,  O(") CHARACTER            
+LATITUD                              NEXT     *   ,  O(") CHARACTER            
+LONGITUD                             NEXT     *   ,  O(") CHARACTER            
+FECHA_ALTA                           NEXT     *   ,  O(") DATE YYYY-MM         
+
+Record 859011: Rejected - Error on table DENUE_LAB.DENUE_ESTABLECIMIENTOS, column NUM_LOCAL.
+ORA-12899: value too large for column NUM_LOCAL (actual: 23, maximum: 20)
+Help: https://docs.oracle.com/error-help/db/ora-12899/
+
+Record 2059209: Rejected - Error on table DENUE_LAB.DENUE_ESTABLECIMIENTOS, column NUM_LOCAL.
+ORA-12899: value too large for column NUM_LOCAL (actual: 23, maximum: 20)
+Help: https://docs.oracle.com/error-help/db/ora-12899/
+
+Record 2864474: Rejected - Error on table DENUE_LAB.DENUE_ESTABLECIMIENTOS, column NUM_LOCAL.
+ORA-12899: value too large for column NUM_LOCAL (actual: 21, maximum: 20)
+Help: https://docs.oracle.com/error-help/db/ora-12899/
+
+Record 4367718: Rejected - Error on table DENUE_LAB.DENUE_ESTABLECIMIENTOS, column NUM_LOCAL.
+ORA-12899: value too large for column NUM_LOCAL (actual: 21, maximum: 20)
+Help: https://docs.oracle.com/error-help/db/ora-12899/
+
+The following index(es) on table DENUE_LAB.DENUE_ESTABLECIMIENTOS were processed:
+index DENUE_LAB.PK_DENUE_ESTAB was made unusable due to:
+ORA-01452: cannot CREATE UNIQUE INDEX; duplicate keys found
+
+Table DENUE_LAB.DENUE_ESTABLECIMIENTOS:
+  6138071 Rows successfully loaded.
+  4 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+  Date cache:
+   Max Size:      1000
+   Entries :        35
+   Hits    :   6138036
+   Misses  :         0
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes:  256000
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          1
+Total logical records read:       6138075
+Total logical records rejected:         4
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:     3295
+Total stream buffers loaded by SQL*Loader load thread:     9475
+
+Run began on Tue Jun 30 05:46:55 2026
+Run ended on Tue Jun 30 05:47:34 2026
+
+Elapsed time was:     00:00:38.24
+CPU time was:         00:00:20.58
