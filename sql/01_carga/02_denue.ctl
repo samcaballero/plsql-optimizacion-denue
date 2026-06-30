@@ -76,5 +76,5 @@ TRAILING NULLCOLS
     TIPOUNIECO,                                 -- tipoUniEco en el CSV original
     LATITUD         DECIMAL EXTERNAL,
     LONGITUD        DECIMAL EXTERNAL,
-    FECHA_ALTA      DATE 'YYYY-MM-DD'           -- formato estándar INEGI
+    FECHA_ALTA      DATE 'YYYY-MM'              -- el DENUE incluye año-mes, sin día
 )
