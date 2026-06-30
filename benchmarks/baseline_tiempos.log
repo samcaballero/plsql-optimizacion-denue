@@ -1,0 +1,328 @@
+Autotrace Enabled
+Shows the execution plan as well as statistics of the statement.
+
+=== Q1: Establecimientos por entidad federativa ===
+
+32 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                             
+_____________________________________________________________________________________________ 
+SQL_ID  296d6g5738v91, child number 0                                                         
+-------------------------------------                                                         
+SELECT entidad,        cve_ent,        COUNT(*) AS num_establecimientos                       
+FROM   DENUE_ESTABLECIMIENTOS GROUP  BY entidad, cve_ent ORDER  BY                            
+num_establecimientos DESC                                                                     
+                                                                                              
+Plan hash value: 401793430                                                                    
+                                                                                              
+------------------------------------------------------------------------------------------    
+| Id  | Operation           | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+------------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT    |                        |        |       |       |          |    
+|   1 |  SORT ORDER BY      |                        |    725 |  2048 |  2048 | 2048  (0)|    
+|   2 |   HASH GROUP BY     |                        |    725 |  1215K|  1215K|          |    
+|   3 |    TABLE ACCESS FULL| DENUE_ESTABLECIMIENTOS |   6138K|       |       |          |    
+------------------------------------------------------------------------------------------    
+                                                                                              
+Note                                                                                          
+-----                                                                                         
+   - Warning: basic plan statistics not available. These are only collected when:             
+       * hint 'gather_plan_statistics' is used for the statement or                           
+       * parameter 'statistics_level' is set to 'ALL', at session or system level             
+                                                                                              
+
+Statistics
+-----------------------------------------------------------
+             317  CPU used by this session
+             317  CPU used when call started
+             324  DB time
+               3  Requests to/from client
+            3255  non-idle wait count
+             223  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               3  process last non-idle time
+          412745  session logical reads
+             222  user I/O wait time
+               5  user calls
+Elapsed: 00:00:03.279
+
+=== Q2: Comercio al por menor (SCIAN 46) en CDMX ===
+
+212,251 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                            
+____________________________________________________________________________________________ 
+SQL_ID  8m17ubz5qk72m, child number 0                                                        
+-------------------------------------                                                        
+SELECT id,        nom_estab,        codigo_act,        nombre_act,                           
+  municipio,        per_ocu FROM   DENUE_ESTABLECIMIENTOS WHERE                              
+codigo_act LIKE '46%'   AND  cve_ent = 9 ORDER  BY municipio, nom_estab                      
+                                                                                             
+Plan hash value: 338230392                                                                   
+                                                                                             
+-----------------------------------------------------------------------------------------    
+| Id  | Operation          | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+-----------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT   |                        |        |       |       |          |    
+|   1 |  SORT ORDER BY     |                        |    694 |    34M|  2088K|   30M (0)|    
+|*  2 |   TABLE ACCESS FULL| DENUE_ESTABLECIMIENTOS |    694 |       |       |          |    
+-----------------------------------------------------------------------------------------    
+                                                                                             
+Predicate Information (identified by operation id):                                          
+---------------------------------------------------                                          
+                                                                                             
+   2 - filter(("CVE_ENT"=9 AND "CODIGO_ACT" LIKE '46%'))                                     
+                                                                                             
+Note                                                                                         
+-----                                                                                        
+   - Warning: basic plan statistics not available. These are only collected when:            
+       * hint 'gather_plan_statistics' is used for the statement or                          
+       * parameter 'statistics_level' is set to 'ALL', at session or system level            
+                                                                                             
+
+Statistics
+-----------------------------------------------------------
+             137  CPU used by this session
+             137  CPU used when call started
+             155  DB time
+           14150  Requests to/from client
+           17500  non-idle wait count
+              53  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               9  process last non-idle time
+          412745  session logical reads
+              48  user I/O wait time
+           14152  user calls
+Elapsed: 00:00:08.526
+
+=== Q3: Top 20 municipios — servicios de alimentos (SCIAN 72) ===
+
+20 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                                 
+_________________________________________________________________________________________________ 
+SQL_ID  bagz67fq48fng, child number 0                                                             
+-------------------------------------                                                             
+SELECT entidad,        municipio,        COUNT(*) AS                                              
+num_establecimientos FROM   DENUE_ESTABLECIMIENTOS WHERE  codigo_act                              
+LIKE '72%' GROUP  BY entidad, municipio ORDER  BY num_establecimientos                            
+DESC FETCH  FIRST 20 ROWS ONLY                                                                    
+                                                                                                  
+Plan hash value: 4110800216                                                                       
+                                                                                                  
+----------------------------------------------------------------------------------------------    
+| Id  | Operation               | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+----------------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT        |                        |        |       |       |          |    
+|*  1 |  COUNT STOPKEY          |                        |        |       |       |          |    
+|   2 |   VIEW                  |                        |   9201 |       |       |          |    
+|*  3 |    SORT ORDER BY STOPKEY|                        |   9201 |  6144 |  6144 | 6144  (0)|    
+|   4 |     HASH GROUP BY       |                        |   9201 |   986K|   986K| 1704K (0)|    
+|*  5 |      TABLE ACCESS FULL  | DENUE_ESTABLECIMIENTOS |   9201 |       |       |          |    
+----------------------------------------------------------------------------------------------    
+                                                                                                  
+Predicate Information (identified by operation id):                                               
+---------------------------------------------------                                               
+                                                                                                  
+   1 - filter(ROWNUM<=20)                                                                         
+   3 - filter(ROWNUM<=20)                                                                         
+   5 - filter("CODIGO_ACT" LIKE '72%')                                                            
+                                                                                                  
+Note                                                                                              
+-----                                                                                             
+   - Warning: basic plan statistics not available. These are only collected when:                 
+       * hint 'gather_plan_statistics' is used for the statement or                               
+       * parameter 'statistics_level' is set to 'ALL', at session or system level                 
+                                                                                                  
+
+Statistics
+-----------------------------------------------------------
+             137  CPU used by this session
+             137  CPU used when call started
+             137  DB time
+               3  Requests to/from client
+            3259  non-idle wait count
+              50  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               1  process last non-idle time
+          412745  session logical reads
+              50  user I/O wait time
+               5  user calls
+Elapsed: 00:00:01.412
+
+=== Q4: Establecimientos grandes — 251 y más personas ocupadas ===
+
+13,198 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                            
+____________________________________________________________________________________________ 
+SQL_ID  21rsm6rpxxcy4, child number 0                                                        
+-------------------------------------                                                        
+SELECT id,        nom_estab,        raz_social,        codigo_act,                           
+  nombre_act,        entidad,        municipio,        per_ocu FROM                          
+DENUE_ESTABLECIMIENTOS WHERE  per_ocu LIKE '%251 y más personas%' ORDER                      
+ BY entidad, nom_estab                                                                       
+                                                                                             
+Plan hash value: 338230392                                                                   
+                                                                                             
+-----------------------------------------------------------------------------------------    
+| Id  | Operation          | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+-----------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT   |                        |        |       |       |          |    
+|   1 |  SORT ORDER BY     |                        |    306K|  2887K|   760K| 2566K (0)|    
+|*  2 |   TABLE ACCESS FULL| DENUE_ESTABLECIMIENTOS |    306K|       |       |          |    
+-----------------------------------------------------------------------------------------    
+                                                                                             
+Predicate Information (identified by operation id):                                          
+---------------------------------------------------                                          
+                                                                                             
+   2 - filter("PER_OCU" LIKE '%251 y más personas%')                                         
+                                                                                             
+Note                                                                                         
+-----                                                                                        
+   - Warning: basic plan statistics not available. These are only collected when:            
+       * hint 'gather_plan_statistics' is used for the statement or                          
+       * parameter 'statistics_level' is set to 'ALL', at session or system level            
+                                                                                             
+
+Statistics
+-----------------------------------------------------------
+             148  CPU used by this session
+             148  CPU used when call started
+             151  DB time
+             880  Requests to/from client
+            4146  non-idle wait count
+              32  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               3  process last non-idle time
+          412745  session logical reads
+              32  user I/O wait time
+             882  user calls
+Elapsed: 00:00:02.260
+
+=== Q5: Distribución por personal — sector manufacturero ===
+
+7 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                             
+_____________________________________________________________________________________________ 
+SQL_ID  6xbyahgq2nd7k, child number 0                                                         
+-------------------------------------                                                         
+SELECT per_ocu,        COUNT(*) AS num_establecimientos FROM                                  
+DENUE_ESTABLECIMIENTOS WHERE  codigo_act LIKE '31%'    OR  codigo_act                         
+LIKE '32%'    OR  codigo_act LIKE '33%' GROUP  BY per_ocu ORDER  BY                           
+num_establecimientos DESC                                                                     
+                                                                                              
+Plan hash value: 401793430                                                                    
+                                                                                              
+------------------------------------------------------------------------------------------    
+| Id  | Operation           | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+------------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT    |                        |        |       |       |          |    
+|   1 |  SORT ORDER BY      |                        |      7 |  2048 |  2048 | 2048  (0)|    
+|   2 |   HASH GROUP BY     |                        |      7 |  1149K|  1149K|          |    
+|*  3 |    TABLE ACCESS FULL| DENUE_ESTABLECIMIENTOS |  27560 |       |       |          |    
+------------------------------------------------------------------------------------------    
+                                                                                              
+Predicate Information (identified by operation id):                                           
+---------------------------------------------------                                           
+                                                                                              
+   3 - filter(("CODIGO_ACT" LIKE '31%' OR "CODIGO_ACT" LIKE '33%' OR "CODIGO_ACT"             
+              LIKE '32%'))                                                                    
+                                                                                              
+Note                                                                                          
+-----                                                                                         
+   - Warning: basic plan statistics not available. These are only collected when:             
+       * hint 'gather_plan_statistics' is used for the statement or                           
+       * parameter 'statistics_level' is set to 'ALL', at session or system level             
+                                                                                              
+
+Statistics
+-----------------------------------------------------------
+             136  CPU used by this session
+             136  CPU used when call started
+             137  DB time
+               3  Requests to/from client
+            3251  non-idle wait count
+              34  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               1  process last non-idle time
+          412745  session logical reads
+              33  user I/O wait time
+               5  user calls
+Elapsed: 00:00:01.403
+
+=== Q6: Tiendas OXXO ===
+
+24,321 rows selected. 
+
+
+PLAN_TABLE_OUTPUT                                                                            
+____________________________________________________________________________________________ 
+SQL_ID  cds7urw7pmx3x, child number 0                                                        
+-------------------------------------                                                        
+SELECT id,        nom_estab,        entidad,        municipio,                               
+cod_postal,        latitud,        longitud FROM                                             
+DENUE_ESTABLECIMIENTOS WHERE  nom_estab LIKE '%OXXO%' ORDER  BY                              
+entidad, municipio                                                                           
+                                                                                             
+Plan hash value: 338230392                                                                   
+                                                                                             
+-----------------------------------------------------------------------------------------    
+| Id  | Operation          | Name                   | E-Rows |  OMem |  1Mem | Used-Mem |    
+-----------------------------------------------------------------------------------------    
+|   0 | SELECT STATEMENT   |                        |        |       |       |          |    
+|   1 |  SORT ORDER BY     |                        |    306K|  3029K|   773K| 2692K (0)|    
+|*  2 |   TABLE ACCESS FULL| DENUE_ESTABLECIMIENTOS |    306K|       |       |          |    
+-----------------------------------------------------------------------------------------    
+                                                                                             
+Predicate Information (identified by operation id):                                          
+---------------------------------------------------                                          
+                                                                                             
+   2 - filter("NOM_ESTAB" LIKE '%OXXO%')                                                     
+                                                                                             
+Note                                                                                         
+-----                                                                                        
+   - Warning: basic plan statistics not available. These are only collected when:            
+       * hint 'gather_plan_statistics' is used for the statement or                          
+       * parameter 'statistics_level' is set to 'ALL', at session or system level            
+                                                                                             
+
+Statistics
+-----------------------------------------------------------
+             239  CPU used by this session
+             239  CPU used when call started
+             242  DB time
+            1622  Requests to/from client
+            4880  non-idle wait count
+              36  non-idle wait time
+               3  opened cursors cumulative
+               1  opened cursors current
+            3240  physical read total IO requests
+            3231  physical read total multi block requests
+               4  process last non-idle time
+          412745  session logical reads
+              36  user I/O wait time
+            1624  user calls
+Elapsed: 00:00:03.477
+Autotrace Disabled

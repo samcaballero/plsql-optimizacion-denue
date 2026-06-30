@@ -11,6 +11,7 @@ data/raw/
 
 # Excepciones: evidencia documentada de benchmarks
 !benchmarks/sqlldr_load.log
+!benchmarks/baseline_tiempos.log
 
 # Archivos de sistema
 Thumbs.db
