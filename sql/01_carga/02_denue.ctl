@@ -9,6 +9,9 @@
 --           DIRECT=TRUE ERRORS=1000 ROWS=50000 BINDSIZE=10485760
 -- =============================================================================
 
+-- SKIP=1 a nivel de carga (load-level) para ignorar el header del CSV
+OPTIONS (SKIP=1)
+
 -- Indica a SQL*Loader que cargue datos
 LOAD DATA
 
@@ -23,10 +26,6 @@ DISCARDFILE '/tmp/denue_discard.dsc'
 
 -- APPEND para no truncar si se carga en varias fases; cambiar a TRUNCATE en carga limpia
 APPEND INTO TABLE DENUE_LAB.DENUE_ESTABLECIMIENTOS
-
--- El CSV tiene header en la primera línea; SQL*Loader lo ignora con SKIP=1
--- (se pasa en la línea de comandos o se puede indicar aquí)
-SKIP 1
 
 -- Delimitador coma; campos opcionalmente entre comillas dobles
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
