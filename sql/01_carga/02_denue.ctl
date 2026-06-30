@@ -11,10 +11,10 @@
 
 -- SKIP=1 a nivel de carga (load-level) para ignorar el header del CSV
 OPTIONS (SKIP=1)
-CHARACTERSET AL32UTF8
 
 -- Indica a SQL*Loader que cargue datos
 LOAD DATA
+CHARACTERSET AL32UTF8
 
 -- Archivo fuente dentro del contenedor Docker
 INFILE '/tmp/denue_completo.csv'
